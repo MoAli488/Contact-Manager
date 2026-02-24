@@ -1,0 +1,11 @@
+# User-specific files
+.vs/
+
+# Build results
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio 2015/2017 cache
+.vshost.exe
+.vshost.exe.config
+.vshost.exe.manifest
