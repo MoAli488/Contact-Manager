@@ -18,5 +18,5 @@ A modern, high-performance contact indexing system designed to replace legacy ph
 1. Open your terminal or command prompt.
 2. Navigate to the project directory:
    ```bash
-   cd Contact_Manager
+   cd Contact-Manager
    dotnet run
