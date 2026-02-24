@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Contact_Manager;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Metrics;
 using System.Text.Json;
 
-namespace ConsoleApp1
+namespace Contact_Manager
 {
     class ContactManager
     {
@@ -20,26 +21,9 @@ namespace ConsoleApp1
                 }
             }
             catch(Exception e) { }
-            finally
+            while(true)
             {
-                Menu();
-            }
-        }
-        static void Menu() {
-            while (true)
-            {
-                Console.WriteLine("\n===== Contact Manager Menu =====");
-                Console.WriteLine("1. Add Contact");
-                Console.WriteLine("2. Edit Contact");
-                Console.WriteLine("3. Delete Contact");
-                Console.WriteLine("4. View Contact");
-                Console.WriteLine("5. List Contacts");
-                Console.WriteLine("6. Search");
-                Console.WriteLine("7. Filter");
-                Console.WriteLine("8. Save");
-                Console.WriteLine("9. Exit");
-                Console.WriteLine("================================");
-                Console.Write("Please select an option: ");
+                Menu.ShowMenu();
                 try
                 {
                     int choice = int.Parse(Console.ReadLine());
