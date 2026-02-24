@@ -11,70 +11,16 @@ namespace Contact_Manager
         private static Dictionary<int, Contact> contactList = new Dictionary<int, Contact>();
         static void Main(String[] args)
         {
-            try
-            {
-                string jsonString = File.ReadAllText("contacts.json");
-                Contact[] contacts = JsonSerializer.Deserialize<List<Contact>>(jsonString).ToArray();
-                foreach (Contact contact in contacts)
-                {
-                    ContactManager.contactList.Add(contact.getID(), contact);
-                }
-            }
-            catch(Exception e) { }
-            while(true)
-            {
-                Menu.ShowMenu();
-                try
-                {
-                    int choice = int.Parse(Console.ReadLine());
-                    switch (choice)
-                    {
-                        case 1:
-                            AddContact();
-                            break;
-                        case 2:
-                            EditContact();
-                            break;
-                        case 3:
-                            DeleteContact();
-                            break;
-                        case 4:
-                            ViewContact();
-                            break;
-                        case 5:
-                            ListContacts();
-                            break;
-                        case 6:
-                            SearchContacts();
-                            break;
-                        case 7:
-                            FilterContacts();
-                            break;
-                        case 8:
-                            SaveContacts();
-                            break;
-                        case 9:
-                            Console.WriteLine("Do you want to save before exiting? (y/n)");
-                            string saveChoice = Console.ReadLine().ToLower();
-                            if (saveChoice == "y")
-                            {
-                                SaveContacts();
-                            }
-                            Console.WriteLine("Exiting...");
-                            return;
-                        default:
-                            Console.WriteLine("Invalid option. Please try again.");
-                            break;
-                    }
 
-                }
-                catch (FormatException e)
-                {
-                    Console.WriteLine("Invalid input. Please enter a number.");
-                }
+            Contact[] contacts = JsonContactRepository.Load().ToArray();
+            foreach (Contact contact in contacts)
+            {
+                ContactManager.contactList.Add(contact.getID(), contact);
             }
+            Menu.ShowMenu();
+
         }
-        static void AddContact() 
+        public static void AddContact() 
         {
             Console.Write("Enter name: ");
             string name = Console.ReadLine();
@@ -88,7 +34,7 @@ namespace Contact_Manager
             contactList.Add(newContact.getID(), newContact);
             Console.WriteLine("Contact added successfully!");
         }
-        static void EditContact() 
+        public static void EditContact() 
         {
             Console.Write("Enter contact ID to edit: ");
             int id = int.Parse(Console.ReadLine());
@@ -114,7 +60,7 @@ namespace Contact_Manager
                 Console.WriteLine("Contact not found.");
             }
         }
-        static void DeleteContact() 
+        public static void DeleteContact() 
         {
             Console.Write("Enter contact ID to delete: ");
             int id = int.Parse(Console.ReadLine());
@@ -128,7 +74,7 @@ namespace Contact_Manager
                 Console.WriteLine("Contact not found.");
             }
         }
-        static void ViewContact() 
+        public static void ViewContact() 
         {
             Console.Write("Enter contact ID to view: ");
             int id = int.Parse(Console.ReadLine());
@@ -141,7 +87,7 @@ namespace Contact_Manager
                 Console.WriteLine("Contact not found.");
             }
         }
-        static void FilterContacts() 
+        public static void FilterContacts()
         {
             List<Contact> contacts = contactList.Values.ToList();
             Console.Write("Enter filter by Name?:(y/n)");
@@ -150,13 +96,7 @@ namespace Contact_Manager
             {
                 Console.Write("Enter name to filter by: ");
                 string nameFilter = Console.ReadLine().ToLower();
-                foreach (Contact contact in contacts)
-                {
-                    if (contact.Name.ToLower() != nameFilter)
-                    {
-                        contacts.Remove(contact);
-                    }
-                }
+                contacts = contacts.Where(c => c.Name.ToLower().Contains(nameFilter)).ToList();
             }
 
             Console.Write("Enter filter by Date?:(y/n)");
@@ -165,13 +105,7 @@ namespace Contact_Manager
             {
                 Console.WriteLine("Enter Date:(MM/DD/YYYY)");
                 string date = Console.ReadLine();
-                foreach (Contact contact in contacts)
-                {
-                    if (!contact.CurrentDateTime.Contains(date))
-                    {
-                        contacts.Remove(contact);
-                    }
-                }
+                contacts = contacts.Where(c => c.CurrentDateTime.Contains(date)).ToList();
             }
             Console.WriteLine("\nFiltered Contacts:");
             foreach (Contact contact in contacts)
@@ -179,7 +113,7 @@ namespace Contact_Manager
                 Console.WriteLine(contact.ToString());
             }
         }
-        static void ListContacts() 
+        public static void ListContacts() 
         {
             if (contactList.Count == 0)
             {
@@ -191,7 +125,7 @@ namespace Contact_Manager
                 Console.WriteLine(contact.ToString());
             }
         }
-        static void SearchContacts() 
+        public static void SearchContacts() 
         {
             Console.Write("Enter search term: ");
             string searchTerm = Console.ReadLine().ToLower();
@@ -211,10 +145,9 @@ namespace Contact_Manager
                 }
             }
         }
-        static void SaveContacts() 
+        public static void SaveContacts() 
         {
-            string jsonFile = JsonSerializer.Serialize(contactList.Values.ToList());
-            File.WriteAllText("contacts.json", jsonFile);
+            JsonContactRepository.Save(contactList.Values.ToList());
             Console.WriteLine("Contacts saved successfully!");
         }
     }
