@@ -14,7 +14,7 @@ namespace Contact_Manager
         {
 
             Contact[] contacts = JsonContactRepository.Load().ToArray();
-            Contact.setIdCounter(contacts.Length > 0 ? contacts.Max(c => c.getID()) : 1);
+            Contact.setIdCounter(contacts.Length > 0 ? contacts.Max(c => c.getID()) : 0);
             foreach (Contact contact in contacts)
             {
                 ContactManager.contactList.Add(contact.getID(), contact);
