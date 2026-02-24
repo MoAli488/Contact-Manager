@@ -13,7 +13,7 @@ namespace Contact_Manager
         {
             if (!File.Exists(FileName)) return new List<Contact>();
             string json = File.ReadAllText(FileName);
-            return json == "" ? JsonSerializer.Deserialize<List<Contact>>(json) : new List<Contact>();
+            return json != "" ? JsonSerializer.Deserialize<List<Contact>>(json) : new List<Contact>();
         }
 
         public static void Save(List<Contact> contacts)

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Metrics;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace Contact_Manager
 {
@@ -13,6 +14,10 @@ namespace Contact_Manager
         {
 
             Contact[] contacts = JsonContactRepository.Load().ToArray();
+            Console.WriteLine(Contact.getIdCounter());
+            Contact.setIdCounter(contacts.Length > 0 ? contacts.Length + 1 : 1);
+            Console.WriteLine(Contact.getIdCounter());
+
             foreach (Contact contact in contacts)
             {
                 ContactManager.contactList.Add(contact.getID(), contact);
@@ -129,20 +134,22 @@ namespace Contact_Manager
         {
             Console.Write("Enter search term: ");
             string searchTerm = Console.ReadLine().ToLower();
+            bool match = false;
             foreach (var contact in contactList.Values)
             {
-                bool match = false;
                 if (contact.Name.ToLower().Contains(searchTerm) || 
                     contact.PhoneNumber.Contains(searchTerm) || 
                     contact.Email.ToLower().Contains(searchTerm))
                 {
                     Console.WriteLine(contact.ToString());
                     match = true;
+                    break;
                 }
-                if(!match)
-                {
-                    Console.WriteLine("No matching contacts found.");
-                }
+
+            }
+            if (!match)
+            {
+                Console.WriteLine("No matching contacts found.");
             }
         }
         public static void SaveContacts() 
